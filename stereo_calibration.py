@@ -1,6 +1,3 @@
-import numpy as np
-import cv2
-import glob
 import sys
 from camera_calibration import *
 
@@ -102,4 +99,3 @@ def stereo_calibration(left_image, right_image):
         right_image_rectified = cv2.remap(right_image, right_map_x, right_map_y, cv2.INTER_LINEAR, cv2.BORDER_CONSTANT)
 
         return left_image_rectified, right_image_rectified
-    

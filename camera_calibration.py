@@ -16,7 +16,7 @@ def calibrate_camera(prefix):
     object_points = []  # 3d point in real world space
     image_points = []  # 2d points in image plane.
 
-    calibration_images = glob.glob('calibration/'+prefix+'*.jpg')
+    calibration_images = glob.glob('calibration/opencv/'+prefix+'*.jpg')
 
     for calibration_image in calibration_images:
 
@@ -40,6 +40,16 @@ def calibrate_camera(prefix):
 
     cv2.destroyAllWindows()
 
-    ret, mtx, dist, r_vectors, t_vectors = cv2.calibrateCamera(object_points, image_points, gray.shape[::-1], None, None)
+    ret, mtx, dist, r_vectors, t_vectors = cv2.calibrateCamera(object_points, image_points,
+                                                               gray.shape[::-1], None, None)
+    '''
+    image = cv2.imread('calibration/opencv/'+prefix+'14.jpg')
+    height, width = image.shape[:2]
 
+    new_camera_matrix, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (width, height), 1, (width, height))
+
+    undistorted_image = cv2.undistort(image, mtx, dist, None, new_camera_matrix)
+
+    cv2.imwrite('calibration_'+prefix+'_test.jpg', undistorted_image)
+    '''
     return mtx, dist

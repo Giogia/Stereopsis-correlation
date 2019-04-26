@@ -14,8 +14,8 @@ def stereo_calibration(left_image, right_image):
     left_image_points = []  # 2d points in image plane.
     right_image_points = []  # 2d points in image plane.
 
-    left_calibration_images = glob.glob('calibration/left*.jpg')
-    right_calibration_images = glob.glob('calibration/right*.jpg')
+    left_calibration_images = glob.glob('calibration/opencv/left*.jpg')
+    right_calibration_images = glob.glob('calibration/opencv/right*.jpg')
 
     # Images should be perfect pairs. Otherwise all the calibration will be false.
     # Be sure that first cam and second cam images are correctly prefixed and numbers are ordered as pairs.
@@ -42,8 +42,8 @@ def stereo_calibration(left_image, right_image):
 
         # Find the chess board corners
         ret_left, corners_left = cv2.findChessboardCorners(gray_left, (7, 6),
-
                                                            cv2.CALIB_CB_ADAPTIVE_THRESH | cv2.CALIB_CB_FILTER_QUADS)
+
         # Right Object Points
         right = cv2.imread(right_calibration_img)
         gray_right = cv2.cvtColor(right, cv2.COLOR_BGR2GRAY)
@@ -65,11 +65,12 @@ def stereo_calibration(left_image, right_image):
             right_image_points.append(corners2_right)
 
             # Draw and display the corners
-            left_calibration_img = cv2.drawChessboardCorners(left_calibration_img, (7, 6), corners2_left, ret_left)
-            right_calibration_img = cv2.drawChessboardCorners(right_calibration_img, (7, 6), corners2_right, ret_right)
-
-            cv2.imshow('calibration images', left_calibration_img, right_calibration_img)
-            cv2.waitKey(500)
+            # left = cv2.drawChessboardCorners(left, (7, 6), corners2_left, ret_left)
+            # right = cv2.drawChessboardCorners(right, (7, 6), corners2_right, ret_right)
+            # cv2.imshow('calibration images', left)
+            # cv2.waitKey(1)
+            # cv2.imshow('calibration_images', right)
+            # cv2.waitKey(500)
 
         else:
             print("Chessboard couldn't detected. Image pair: ", left_calibration_img, " and ", right_calibration_img)
@@ -77,25 +78,36 @@ def stereo_calibration(left_image, right_image):
 
         cv2.destroyAllWindows()
 
-        flag = 0
-        # flag |= cv2.CALIB_FIX_INTRINSIC
-        flag |= cv2.CALIB_USE_INTRINSIC_GUESS
+    #flag = 0
+    #flag |= cv2.CALIB_FIX_INTRINSIC
+    #flag |= cv2.CALIB_USE_INTRINSIC_GUESS
 
-        k1, d1 = calibrate_camera(left)
-        k2, d2 = calibrate_camera(right)
+    k1, d1 = calibrate_camera('left')
+    k2, d2 = calibrate_camera('right')
 
-        ret, k1, d1, k2, d2, r, t, e, f = cv2.stereoCalibrate(object_points, left_image_points, right_image_points, k1, d1, k2, d2, None)
+    height, width = right_image.shape[:2]
 
-        print("Stereo calibration rms: ", ret)
-        r1, r2, p1, p2, q, roi_left, roi_right = cv2.stereoRectify(k1, d1, k2, d2, None, r, t,
-                                                                   flags=cv2.CALIB_ZERO_DISPARITY, alpha=0.9)
+    ret, k1, d1, k2, d2, r, t, e, f = cv2.stereoCalibrate(object_points, left_image_points,
+                                                          right_image_points, k1, d1, k2, d2, (width, height))
 
-        height, width = left_image.shape[:2]
+    print("Stereo calibration rms: ", ret)
+    r1, r2, p1, p2, q, roi_left, roi_right = cv2.stereoRectify(k1, d1, k2, d2, (width, height), r, t,
+                                                               flags=cv2.CALIB_ZERO_DISPARITY)
 
-        left_map_x, left_map_y = cv2.initUndistortRectifyMap(k1, d1, r1, p1, (width, height), cv2.CV_32FC1)
-        left_image_rectified = cv2.remap(left_image, left_map_x, left_map_y, cv2.INTER_LINEAR, cv2.BORDER_CONSTANT)
+    left_map_x, left_map_y = cv2.initUndistortRectifyMap(k1, d1, r1, p1, (width, height), cv2.CV_32FC1)
+    left_image_rectified = cv2.remap(left_image, left_map_x, left_map_y, cv2.INTER_CUBIC, cv2.BORDER_CONSTANT)
 
-        right_map_x, right_map_y = cv2.initUndistortRectifyMap(k2, d2, r2, p2, (width, height), cv2.CV_32FC1)
-        right_image_rectified = cv2.remap(right_image, right_map_x, right_map_y, cv2.INTER_LINEAR, cv2.BORDER_CONSTANT)
+    right_map_x, right_map_y = cv2.initUndistortRectifyMap(k2, d2, r2, p2, (width, height), cv2.CV_32FC1)
+    right_image_rectified = cv2.remap(right_image, right_map_x, right_map_y, cv2.INTER_CUBIC, cv2.BORDER_CONSTANT)
 
-        return left_image_rectified, right_image_rectified
+    return left_image_rectified, right_image_rectified
+
+
+immagine_left = cv2.imread('calibration/opencv/left09.jpg')
+immagine_right = cv2.imread('calibration/opencv/right09.jpg')
+
+immagine_left, immagine_right = stereo_calibration(immagine_left, immagine_right)
+
+cv2.imwrite('left_calibration_test.jpg', immagine_left)
+cv2.imwrite('right_calibration_test.jpg', immagine_right)
+cv2.destroyAllWindows()

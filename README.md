@@ -26,9 +26,10 @@ Run the following command
 ```
 python correlation.py
 ```
+---
 
 ### Results
----
+
 <img src="dataset/109_L.png" width="33%" /> <img src="dataset/109_R.png" width="33%" /> <img src="dataset/109_result.png" width="33%" /> 
 
 <img src="dataset/104_L.png" width="33%" /> <img src="dataset/104_R.png" width="33%" /> <img src="dataset/104_result.png" width="33%" /> 

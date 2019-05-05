@@ -2,6 +2,10 @@
 
 ### Depth map estimation using a correlation approach to stereopsis
 
+A common approach to stereopsis accomplished using correlation metric to find the closest match in the other image.
+
+Correlation is defined as the product of two normalized vectors divided by their norm.
+
 ### Prerequisites
 ---
 

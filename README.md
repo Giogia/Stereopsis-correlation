@@ -14,7 +14,8 @@
 Test set of Flickr1024, **[dataset](https://yingqianwang.github.io/Flickr1024/)**.
 
 ### Usage
----
+
+Run the following command
 
 ```
 python correlation.py

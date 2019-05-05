@@ -22,6 +22,6 @@ python correlation.py
 
 ### Results
 ---
-<img src="dataset/109_L.png" width="31%" /> <img src="dataset/109_R.png" width="31%" /> <img src="dataset/109_result.png" width="31%" /> 
+<img src="dataset/109_L.png" width="33%" /> <img src="dataset/109_R.png" width="33%" /> <img src="dataset/109_result.png" width="33%" /> 
 
 

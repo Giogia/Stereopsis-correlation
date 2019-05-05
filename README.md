@@ -7,15 +7,17 @@ A common approach to stereopsis accomplished using correlation metric to find th
 Correlation is defined as the product of two normalized vectors divided by their norm.
 
 ### Prerequisites
----
 
 * Python 3
 * Rectified Stereo Images
 
-### Dataset
 ---
 
+### Dataset
+
 Test set of Flickr1024, **[dataset](https://yingqianwang.github.io/Flickr1024/)**.
+
+---
 
 ### Usage
 

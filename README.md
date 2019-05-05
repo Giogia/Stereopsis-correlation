@@ -26,7 +26,7 @@ Run the following command
 ```
 python correlation.py
 ```
----
+
 
 ### Results
 
